@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>华渔智控云工厂</title>
+    <style>
+        /* 基础样式 */
+        body {
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url("img/壁纸3.jpg") no-repeat center center fixed;
+            background-size: cover;
+            background-position: center;
+            color: #e0f7fa;
+            font-weight: 400;
+        }
+
+        /* 头部样式 */
+        header {
+            color: #1022ecdb;
+            text-align: center;
+            padding: 80px 0;
+            position: relative;
+            overflow: hidden;
+            perspective: 1000px;
+            background-color: transparent;
+            box-shadow: none;
+            border: none;
+            margin-top: 200px;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1568689813929-2c917a679766?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1950&q=80') no-repeat center center/cover;
+            opacity: 0.2;
+            z-index: -1;
+            transform: rotateX(30deg);
+        }
+
+        header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 72px;
+            font-weight: 700;
+            margin: 0;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            animation: fadeInDown 1.5s ease-out;
+            position: relative;
+            z-index: 2;
+            transform: translateZ(50px);
+            color: #0088f8;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-150px) translateZ(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) translateZ(0);
+            }
+        }
+
+        /* 导航栏样式 */
+        nav {
+            background-color: rgba(38, 198, 218, 0.8);
+            display: flex;
+            justify-content: flex-start;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            border-bottom: 3px solid #00acc1;
+            border-top: 3px solid #00acc1;
+            transition: background-color 0.3s ease;
+        }
+
+        nav a {
+            color: #4c7db1;
+            text-decoration: none;
+            padding: 12px 20px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            align-items: center;
+            border-bottom: 3px solid transparent;
+        }
+
+        nav a i {
+            margin-right: 8px;
+            font-size: 20px;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover {
+            background-color: rgba(38, 198, 218, 0.8);
+            color: #4c7db1;
+            border-bottom: 3px solid #4c7db1;
+            transform: translateY(-3px);
+        }
+
+        nav a:hover i {
+            transform: scale(1.2) rotate(10deg);
+        }
+
+        /* 用户信息样式 */
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: auto;
+        }
+
+        .user-info span {
+            color: #4c7db1;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .logout-button {
+            background-color: white;
+            color: #00acc1;
+            border: 1px solid #00acc1;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 20px;
+            transition: background 0.3s ease, color 0.3s ease;
+            display: none;
+        }
+
+        .logout-button:hover {
+            background-color: #00acc1;
+            color: white;
+        }
+
+        /* 登录图标样式 */
+        .user-icon {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+        }
+
+        .user-icon i {
+            margin-right: 5px;
+        }
+
+        /* 登录状态样式 */
+        .logged-in .user-icon {
+            display: none;
+        }
+
+        .logged-in .user-info {
+            display: flex;
+        }
+
+        /* 内容区域样式 */
+        .content {
+            padding: 50px 40px 200px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            justify-items: center;
+            animation: fadeInContent 1s ease-out;
+            margin-top: 40px;
+            max-width: 1800px;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+            top: -20px;
+        }
+
+        @keyframes fadeInContent {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 板块样式 */
+        .section {
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            padding: 30px;
+            width: 350px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(0, 172, 193, 0.3);
+            transform-style: preserve-3d;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: -10%;
+            left: -10%;
+            width: 120%;
+            height: 120%;
+            background: linear-gradient(45deg, rgba(38, 198, 218, 0.05), rgba(38, 198, 218, 0.1));
+            transform: rotate(45deg) scale(0);
+            opacity: 0;
+            transition: all 0.6s ease;
+            z-index: -1;
+        }
+
+        .section:hover {
+            transform: translateY(-20px) translateZ(20px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25);
+            border: 2px solid #00f8e3c7;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .section:hover::before {
+            transform: rotate(45deg) scale(1);
+            opacity: 1;
+        }
+
+        .section h2 {
+            margin-top: 0;
+            color: #00f8e3c7;
+            font-size: 32px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            font-family: 'Montserrat', sans-serif;
+            margin-bottom: 20px;
+            transform: translateZ(30px);
+        }
+
+        .section h2 i {
+            margin-right: 15px;
+            font-size: 36px;
+            color: #00f8e3c7;
+            transition: all 0.3s ease;
+        }
+
+        .section:hover h2 i {
+            transform: rotate(360deg);
+        }
+
+        .section p {
+            line-height: 1.8;
+            color: #ffffff;
+            font-size: 18px;
+            transform: translateZ(20px);
+        }
+
+        /* 自定义背景图样式 */
+        .section-data-view {
+            background-image: url('img/4cccadfcc9a015bf37e3e9e50dcd028.jpg');
+            background-size: cover;
+            background-position: center;
+            backdrop-filter: blur(2px);
+        }
+
+        .section-report-generation {
+            background-image: url('img/d53da4fed859da85a05892831054750.jpg');
+            background-size: cover;
+            background-position: center;
+            backdrop-filter: blur(2px);
+        }
+
+        .section-device-control {
+            background-image: url('img/0054a965e57f927785f76f019424dd7.jpg');
+            background-size: cover;
+            background-position: center;
+            backdrop-filter: blur(2px);
+        }
+
+        /* 数据展示界面样式 */
+        #data-display {
+            display: none;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border-radius: 15px;
+            margin: 30px;
+            border: 1px solid rgba(0, 172, 193, 0.3);
+            text-align: center;
+            animation: fadeInData 1s ease-out;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes fadeInData {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #data-display h2 {
+            color: #00acc1;
+            font-size: 40px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        #data-display p {
+            line-height: 1.8;
+            color: #546e7a;
+            font-size: 24px;
+            margin: 20px 0;
+            padding: 10px;
+            border-bottom: 1px dotted #00acc1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #data-display p:last-child {
+            border-bottom: none;
+        }
+
+        #data-display p span {
+            font-weight: bold;
+            color: #00acc1;
+            margin-left: 10px;
+        }
+
+        #back-button {
+            background-color: #00acc1;
+            color: #ffffff;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 30px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            font-size: 18px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        #back-button:hover {
+            background-color: #00838f;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 设备控制界面样式 */
+        #device-control-display {
+            display: none;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border-radius: 15px;
+            margin: 30px;
+            text-align: center;
+            animation: fadeInDevice 1s ease-out;
+        }
+
+        #device-control-display h2 {
+            color: #00acc1;
+            font-size: 40px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        #device-control-display p {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+            padding: 10px;
+            background-color: transparent;
+            border-radius: 10px;
+            box-shadow: none;
+        }
+
+        #device-control-display p span {
+            text-align: center;
+            font-size: 18px;
+            color: #546e7a;
+        }
+
+        #device-control-display p button {
+            background-color: #00acc1;
+            color: #ffffff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        #device-control-display p button:hover {
+            background-color: #00838f;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 登录模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 300px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .modal-content h2 {
+            color: #00acc1;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .modal-content button {
+            background-color: #00acc1;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .modal-content button:hover {
+            background-color: #00838f;
+        }
+
+        /* 智能鱼桶展示板块样式 */
+        .fish-tank-showcase {
+            padding: 300px 100px 500px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(0, 172, 193, 0.3);
+            border-bottom: 1px solid rgba(0, 172, 193, 0.3);
+            margin-top: 60px;
+        }
+
+        .fish-tank-showcase h2 {
+            text-align: left;
+            font-size: 48px;
+            color: #d1fbff;
+            margin-top: -100px;
+            margin-bottom: 60px;
+            font-family: 'Montserrat', sans-serif;
+            text-shadow: 0 0 20px rgba(0, 248, 227, 0.5);
+            padding-left: 20px;
+        }
+
+        .fish-tank-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+            gap: 60px;
+        }
+
+        .fish-tank-image {
+            flex: 1;
+            max-width: 70%;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .fish-tank-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .fish-tank-image:hover img {
+            transform: scale(1.05);
+        }
+
+        .fish-tank-features {
+            flex: 1;
+            max-width: 30%;
+            padding: 20px;
+            margin-left: auto;
+        }
+
+        .fish-tank-features h3 {
+            font-size: 36px;
+            color: #d0f6f3c7;
+            margin-bottom: 36px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .fish-tank-features p {
+            font-size: 18px;
+            color: #e0f7fa;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .fish-tank-features ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 30px;
+        }
+
+        .fish-tank-features ul li i {
+            margin-right: 10px;
+            font-size: 20px;
+            color: #00f8e3c7;
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #00f8e3c7, #3543e0a9);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 图片轮播样式 */
+        .carousel {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .carousel-inner {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .carousel-item {
+            min-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .carousel-item img {
+            width: 100%;
+            display: block;
+        }
+
+        .carousel-control {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 24px;
+            border-radius: 50%;
+            transition: background-color 0.3s ease;
+        }
+
+        .carousel-control:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .carousel-control.prev {
+            left: 10px;
+        }
+
+        .carousel-control.next {
+            right: 10px;
+        }
+
+        /* 移动端适配 */
+        @media only screen and (max-width: 768px) {
+            /* 调整头部 */
+            header {
+                padding: 60px 0;
+                margin-top: 100px;
+            }
+            
+            header h1 {
+                font-size: 36px;
+            }
+            
+            /* 导航栏调整 */
+            nav {
+                flex-wrap: wrap;
+                padding: 5px 0;
+            }
+            
+            nav a {
+                padding: 8px 10px;
+                font-size: 14px;
+            }
+            
+            nav a i {
+                font-size: 16px;
+                margin-right: 5px;
+            }
+            
+            .user-icon, .logout-button {
+                font-size: 14px;
+                padding: 8px 10px;
+            }
+            
+            /* 内容区域调整 */
+            .content {
+                grid-template-columns: 1fr;
+                padding: 20px;
+                gap: 20px;
+            }
+            
+            .section {
+                width: 100%;
+                padding: 20px;
+            }
+            
+            .section h2 {
+                font-size: 24px;
+            }
+            
+            .section p {
+                font-size: 16px;
+            }
+            
+            /* 数据展示界面调整 */
+            #data-display, #device-control-display {
+                padding: 20px;
+                margin: 15px;
+            }
+            
+            #data-display h2, #device-control-display h2 {
+                font-size: 28px;
+            }
+            
+            #data-display p, #device-control-display p {
+                font-size: 18px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            /* 智能鱼桶展示区调整 */
+            .fish-tank-showcase {
+                padding: 100px 20px;
+            }
+            
+            .fish-tank-showcase h2 {
+                font-size: 28px;
+                margin-top: 0;
+                margin-bottom: 30px;
+            }
+            
+            .fish-tank-container {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .fish-tank-image, .fish-tank-features {
+                max-width: 100%;
+            }
+            
+            .fish-tank-features h3 {
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+            
+            .fish-tank-features p {
+                font-size: 16px;
+                margin-bottom: 20px;
+            }
+            
+            /* 设备控制界面调整 */
+            #device-control-display p {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            
+            #device-control-display p button {
+                width: 100%;
+                margin-top: 5px;
+            }
+        }
+
+        /* 针对更小的手机屏幕 */
+        @media only screen and (max-width: 480px) {
+            header {
+                padding: 40px 0;
+                margin-top: 80px;
+            }
+            
+            header h1 {
+                font-size: 28px;
+            }
+            
+            nav a {
+                padding: 6px 8px;
+                font-size: 12px;
+            }
+            
+            .section h2 {
+                font-size: 20px;
+            }
+        }
+    </style>  
+    <!-- 引入 Google Fonts 和 Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body>
+    <!-- 导航栏 -->
+    <nav>
+      <a href="#" onclick="showHome()"><i class="fas fa-home"></i> 首页</a>
+      <a href="#" onclick="showDataDisplay()"><i class="fas fa-chart-bar"></i> 数据查看</a>
+      <a href="#" onclick="showReportGeneration()"><i class="fas fa-file-alt"></i> 报告生成</a>
+      <a href="#" onclick="showDeviceControl()"><i class="fas fa-sliders-h"></i> 设备控制</a>
+      <a href="#" onclick="scrollToShowcase()"><i class="fas fa-project-diagram"></i> 项目展示</a>
+      <div class="user-info" id="user-info">
+        <span id="username-display"></span>
+      </div>
+      <button class="logout-button" onclick="logout()">退出登录</button>
+      <div class="user-icon" id="user-icon" onclick="openModal()"><i class="fas fa-user"></i> 登录</div>
+    </nav>
+
+    <!-- 头部 -->
+    <header>
+        <h1>华渔智控云工厂</h1>
+    </header>
+
+    <!-- 内容区域 -->
+    <div class="content" id="main-content">
+        <!-- 数据查看板块 -->
+        <div class="section section-data-view" onclick="showDataDisplay()">
+            <h2><i class="fas fa-chart-bar"></i> 数据查看</h2>
+            <p>实时查看水质、温湿度、设备状态等养殖环境数据。</p>
+        </div>
+        <!-- 报告生成板块 -->
+        <div class="section section-report-generation" onclick="showReportGeneration()">
+            <h2><i class="fas fa-file-alt"></i> 报告生成</h2>
+            <p>基于后端数据分析，生成详细的养殖环境报告。</p>
+        </div>
+        <!-- 设备控制板块 -->
+        <div class="section section-device-control" onclick="showDeviceControl()">
+            <h2><i class="fas fa-sliders-h"></i> 设备控制</h2>
+            <p>远程控制养殖设备，确保养殖环境始终处于最佳状态。</p>
+        </div>
+    </div>
+
+    <!-- 数据展示界面 -->
+    <div id="data-display">
+        <h2>详细数据信息</h2>
+        <p>溶解氧：<span id="dissolved-oxygen">暂无数据</span></p>
+        <p>温度：<span id="temperature">暂无数据</span></p>
+        <p>浊度：<span id="turbidity">暂无数据</span></p>
+        <p>pH：<span id="ph">暂无数据</span></p>
+        <p>水位：<span id="water-level">暂无数据</span></p>
+        <button id="back-button" onclick="hideDataDisplay()">返回</button>
+    </div>
+
+    <!-- 设备控制界面 -->
+    <div id="device-control-display">
+        <h2>设备控制界面</h2>
+        <p>
+            <span>增氧泵：<span id="aerator-status">关闭</span></span>
+            <button id="aerator-toggle" onclick="toggleAerator()">切换状态</button>
+        </p>
+        <p>
+            <span>水温调节器：<span id="temperature-regulator-status">关闭</span></span>
+            <button id="temperature-regulator-toggle" onclick="toggleTemperatureRegulator()">切换状态</button>
+        </p>
+        <p>
+            <span>水质净化器：<span id="water-purifier-status">关闭</span></span>
+            <button id="water-purifier-toggle" onclick="toggleWaterPurifier()">切换状态</button>
+        </p>
+        <p>
+            <span>喂食器：<span id="feeder-status">关闭</span></span>
+            <button id="feeder-toggle" onclick="toggleFeeder()">切换状态</button>
+        </p>
+        <button id="back-button" onclick="hideDeviceControl()">返回</button>
+    </div>
+
+    <!-- 登录模态框 -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>登录</h2>
+            <input type="text" id="username" placeholder="用户名">
+            <input type="password" id="password" placeholder="密码">
+            <button onclick="login()">登录</button>
+        </div>
+    </div>
+
+    <!-- 智能鱼桶展示板块 -->
+    <div class="fish-tank-showcase">
+        <h2>基于Edge-AIoT华渔智控云工厂</h2>
+        <div class="fish-tank-container">
+            <!-- 图片轮播 -->
+            <div class="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item">
+                        <img src="img/fish-tank1.jpg" alt="智能鱼桶 1">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="img/fish-tank2.jpg" alt="智能鱼桶 2">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="img/fish-tank3.jpg" alt="智能鱼桶 3">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="img/fish-tank4.jpg" alt="智能鱼桶 4">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="img/fish-tank5.jpg" alt="智能鱼桶 5">
+                    </div>
+                </div>
+                <button class="carousel-control prev" onclick="prevSlide()">❮</button>
+                <button class="carousel-control next" onclick="nextSlide()">❯</button>
+            </div>
+            <!-- 鱼桶功能介绍 -->
+            <div class="fish-tank-features">
+                <h3>项目展示</h3>
+                <p id="feature-text">具体介绍</p>
+                <button class="cta-button" onclick="nextFeature()">切换</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量用于记录登录状态和当前用户
+        let isLoggedIn = false;
+        let currentUser = null;
+
+        // 用户数据
+        const users = [
+            { username: '高乾程', password: '2023211668' },
+            { username: '陆禹彤', password: '13149551983' },
+            { username: '赵文渤', password: '15794895008' },
+            { username: '钟怡茹', password: '18846424676' },
+            { username: '宋玉婷', password: '18569202926' },
+            { username: '袁得春', password: 'ydc229' }
+        ];
+
+        // 显示登录模态框
+        function openModal() {
+            document.getElementById('login-modal').style.display = 'block';
+        }
+
+        // 关闭登录模态框
+        function closeModal() {
+            document.getElementById('login-modal').style.display = 'none';
+        }
+
+        // 登录函数
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // 检查用户是否存在
+            const user = users.find(u => u.username === username && u.password === password);
+
+            if (user) {
+                isLoggedIn = true;
+                currentUser = user;
+                closeModal();
+                updateUserInfo();
+                alert('登录成功！');
+            } else {
+                alert('用户名或密码错误，请重试。');
+            }
+        }
+
+        // 更新用户信息显示
+        function updateUserInfo() {
+            const userInfo = document.getElementById('user-info');
+            const usernameDisplay = document.getElementById('username-display');
+            const logoutButton = document.querySelector('.logout-button');
+            const userIcon = document.getElementById('user-icon');
+
+            if (isLoggedIn) {
+                usernameDisplay.textContent = currentUser.username;
+                userInfo.style.display = 'flex';
+                logoutButton.style.display = 'block';
+                userIcon.style.display = 'none';
+            } else {
+                userInfo.style.display = 'none';
+                logoutButton.style.display = 'none';
+                userIcon.style.display = 'flex';
+            }
+        }
+
+        // 退出登录
+        function logout() {
+            isLoggedIn = false;
+            currentUser = null;
+            updateUserInfo();
+            alert('已退出登录。');
+        }
+
+        // 显示首页
+        function showHome() {
+            document.getElementById('main-content').style.display = 'grid';
+            document.getElementById('data-display').style.display = 'none';
+            document.getElementById('device-control-display').style.display = 'none';
+        }
+
+        // 显示数据展示界面
+        function showDataDisplay() {
+            if (!isLoggedIn) {
+                openModal();
+                return;
+            }
+            document.getElementById('main-content').style.display = 'none';
+            document.getElementById('data-display').style.display = 'block';
+            document.getElementById('device-control-display').style.display = 'none';
+            fetchData();
+        }
+
+        // 隐藏数据展示界面
+        function hideDataDisplay() {
+            document.getElementById('data-display').style.display = 'none';
+            document.getElementById('main-content').style.display = 'grid';
+        }
+
+        // 显示设备控制界面
+        function showDeviceControl() {
+            if (!isLoggedIn) {
+                openModal();
+                return;
+            }
+            document.getElementById('main-content').style.display = 'none';
+            document.getElementById('data-display').style.display = 'none';
+            document.getElementById('device-control-display').style.display = 'block';
+        }
+
+        // 隐藏设备控制界面
+        function hideDeviceControl() {
+            document.getElementById('device-control-display').style.display = 'none';
+            document.getElementById('main-content').style.display = 'grid';
+        }
+
+        // 切换设备状态
+        function toggleAerator() {
+            const statusElement = document.getElementById('aerator-status');
+            const currentStatus = statusElement.textContent;
+            const newStatus = currentStatus === '关闭' ? '开启' : '关闭';
+            statusElement.textContent = newStatus;
+            controlDevice('aerator', newStatus);
+        }
+
+        function toggleTemperatureRegulator() {
+            const statusElement = document.getElementById('temperature-regulator-status');
+            const currentStatus = statusElement.textContent;
+            const newStatus = currentStatus === '关闭' ? '开启' : '关闭';
+            statusElement.textContent = newStatus;
+            controlDevice('temperature-regulator', newStatus);
+        }
+
+        function toggleWaterPurifier() {
+            const statusElement = document.getElementById('water-purifier-status');
+            const currentStatus = statusElement.textContent;
+            const newStatus = currentStatus === '关闭' ? '开启' : '关闭';
+            statusElement.textContent = newStatus;
+            controlDevice('water-purifier', newStatus);
+        }
+
+        function toggleFeeder() {
+            const statusElement = document.getElementById('feeder-status');
+            const currentStatus = statusElement.textContent;
+            const newStatus = currentStatus === '关闭' ? '开启' : '关闭';
+            statusElement.textContent = newStatus;
+            controlDevice('feeder', newStatus);
+        }
+
+        // 从后端获取数据
+        function fetchData() {
+            fetch('/api/data')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('dissolved-oxygen').textContent = data.dissolvedOxygen;
+                    document.getElementById('temperature').textContent = data.temperature;
+                    document.getElementById('turbidity').textContent = data.turbidity;
+                    document.getElementById('ph').textContent = data.ph;
+                    document.getElementById('water-level').textContent = data.waterLevel;
+                })
+                .catch(error => console.error('获取数据失败:', error));
+        }
+
+        // 控制设备
+        function controlDevice(device, status) {
+            fetch('/api/control', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ device, status }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('设备控制成功:', data);
+                })
+                .catch(error => console.error('设备控制失败:', error));
+        }
+
+        // 图片轮播逻辑
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.carousel-item');
+        const totalSlides = slides.length;
+        // 功能介绍数据
+        const features = [
+            "基于Edge-AIoT的智能鱼桶控制系统，实现水质实时监测",
+            "采用多传感器融合技术，精准测量溶解氧、温度、浊度等参数",
+            "远程控制功能，可通过手机或电脑调节增氧泵、喂食器等设备",
+            "数据分析系统，自动生成养殖环境报告，优化养殖方案",
+            "云端数据存储，历史数据可追溯，支持多设备协同管理"
+        ];
+
+        function showSlide(index) {
+            const carouselInner = document.querySelector('.carousel-inner');
+            carouselInner.style.transform = `translateX(-${index * 100}%)`;
+            document.getElementById('feature-text').textContent = features[index];
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            showSlide(currentSlide);
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            showSlide(currentSlide);
+        }
+
+        function nextFeature() {
+            nextSlide();
+        }
+
+        // 滚动到展示区
+        function scrollToShowcase() {
+            const showcaseSection = document.querySelector('.fish-tank-showcase');
+            showcaseSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // 触摸滑动轮播功能
+        let touchStartX = 0;
+        let touchEndX = 0;
+        const carousel = document.querySelector('.carousel');
+
+        carousel.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, false);
+
+        carousel.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, false);
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) {
+                // 向左滑动 - 下一张
+                nextSlide();
+            }
+            if (touchEndX > touchStartX + 50) {
+                // 向右滑动 - 上一张
+                prevSlide();
+            }
+        }
+
+        // 初始化显示第一张图片和文字
+        showSlide(currentSlide);
+
+        // 点击空白处关闭登录模态框
+        window.addEventListener('click', (event) => {
+            const modal = document.getElementById('login-modal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+
+        // 回车键登录
+        document.getElementById('password').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                login();
+            }
+        });
+    </script>
+</body>
+</html>
